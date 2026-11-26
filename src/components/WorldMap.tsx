@@ -20,6 +20,7 @@ const H = 470;
 const projection = geoEqualEarth().scale(178).translate([W / 2, H / 2 + 20]);
 const path = geoPath(projection);
 const byCcn3 = new Map(COUNTRIES.map((c) => [c.ccn3, c]));
+const BY_CODE_MAP = new Map(COUNTRIES.map((c) => [c.code, c]));
 
 export function useShapes() {
   const [shapes, setShapes] = useState<Shape[] | null>(null);
@@ -55,7 +56,7 @@ export function WorldMap({ fill, onSelect, selected, highlight, label, compact =
           <path
             key={i}
             d={path(s) ?? ''}
-            fill={code ? (highlight ? (code === highlight ? 'var(--primary)' : 'var(--raised)') : fill?.(code) ?? 'var(--raised)') : 'var(--line)'}
+            fill={code ? (highlight ? (code === highlight ? 'var(--brass)' : 'var(--line)') : fill?.(code) ?? 'var(--raised)') : 'var(--line)'}
             stroke={isHi ? 'var(--ink)' : 'var(--surface)'}
             strokeWidth={isHi ? 1.6 : 0.5}
             className={interactive && code ? 'cursor-pointer hover:brightness-110' : ''}
@@ -69,14 +70,14 @@ export function WorldMap({ fill, onSelect, selected, highlight, label, compact =
         const p = projection([c.latlng[1], c.latlng[0]]);
         if (!p) return null;
         const isHi = c.code === highlight || c.code === selected;
-        const r = compact ? 5 : 4.2;
+        const r = compact ? (c.code === highlight ? 9 : 5) : 4.2;
         return (
           <circle
             key={c.code}
             cx={p[0]}
             cy={p[1]}
             r={isHi ? r + 2 : r}
-            fill={highlight ? (c.code === highlight ? 'var(--primary)' : 'transparent') : fill?.(c.code) ?? 'var(--raised)'}
+            fill={highlight ? (c.code === highlight ? 'var(--brass)' : 'transparent') : fill?.(c.code) ?? 'var(--raised)'}
             stroke={highlight && c.code !== highlight ? 'none' : 'var(--ink)'}
             strokeWidth={isHi ? 1.6 : 0.6}
             className={interactive ? 'cursor-pointer' : ''}
@@ -86,6 +87,11 @@ export function WorldMap({ fill, onSelect, selected, highlight, label, compact =
           </circle>
         );
       })}
+      {highlight && BY_CODE_MAP.get(highlight) && (() => {
+        const c = BY_CODE_MAP.get(highlight)!;
+        const p = projection([c.latlng[1], c.latlng[0]]);
+        return p ? <circle cx={p[0]} cy={p[1]} r={compact ? 30 : 16} fill="none" stroke="var(--brass)" strokeWidth={compact ? 6 : 3} /> : null;
+      })()}
     </svg>
   );
 }

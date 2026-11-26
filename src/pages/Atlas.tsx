@@ -1,6 +1,6 @@
 import { LevelIcon } from '../components/LevelIcon';
-import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Flag } from '../components/Flag';
 import { Chip, PageHeader } from '../components/ui';
 import { BONUS, CONTINENTS, COUNTRIES, type Continent } from '../data/countries';
@@ -14,9 +14,15 @@ const bonusSearch = createSearcher(BONUS);
 export default function Atlas() {
   const progress = useStore((s) => s.progress);
   const showBonus = useStore((s) => s.settings.showBonus);
-  const [q, setQ] = useState('');
-  const [cont, setCont] = useState<Continent | 'all'>('all');
-  const [tab, setTab] = useState<'core' | 'bonus'>('core');
+  // Filters live in the URL so a filtered view can be bookmarked or shared.
+  const [params, setParams] = useSearchParams();
+  const q = params.get('q') ?? '';
+  const cont = (params.get('continent') as Continent | null) ?? 'all';
+  const tab = params.get('set') === 'bonus' ? 'bonus' : 'core';
+  const update = (k: string, v: string | null) => setParams((p) => { if (v) p.set(k, v); else p.delete(k); return p; }, { replace: true });
+  const setQ = (v: string) => update('q', v || null);
+  const setCont = (v: Continent | 'all') => update('continent', v === 'all' ? null : v);
+  const setTab = (v: 'core' | 'bonus') => update('set', v === 'bonus' ? v : null);
   const list = useMemo(() => {
     const base = tab === 'core' ? COUNTRIES : BONUS;
     const hits = q.trim() ? (tab === 'core' ? coreSearch : bonusSearch).search(q, 60) : base;
@@ -27,7 +33,7 @@ export default function Atlas() {
     <div>
       <PageHeader title="Flag Atlas" subtitle="Every national flag with its meaning, memory tricks and look-alikes. Browsing here is for reference — progress comes from practice." />
       <div className="flex flex-wrap gap-3 items-center mb-4">
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name or alias…" aria-label="Search flags" className="h-11 flex-1 min-w-60 rounded-xl border border-line bg-surface px-4 outline-none focus:border-primary" />
+        <input name="search" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name or alias…" aria-label="Search flags" className="h-11 flex-1 min-w-60 rounded-xl border border-line bg-surface px-4 outline-none focus:border-primary" />
         {showBonus && (
           <div className="flex gap-2" role="group" aria-label="Collection">
             <Chip active={tab === 'core'} onClick={() => setTab('core')}>195 countries</Chip>
@@ -44,7 +50,7 @@ export default function Atlas() {
         {list.map((c) => {
           const lvl = levelOf(progress[c.code]);
           return (
-            <li key={c.code}>
+            <li key={c.code} className="cv-auto">
               <Link to={`/atlas/${c.code}`} className="group flex h-full flex-col rounded-2xl border border-line bg-surface p-3 hover:border-primary transition">
                 <div className="stage rounded-xl h-28 grid place-items-center"><Flag code={c.code} height={72} maxWidth={130} /></div>
                 <span className="mt-2 font-semibold text-[15px] leading-tight group-hover:text-primary">{c.name}</span>

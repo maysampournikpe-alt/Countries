@@ -85,6 +85,20 @@ body {
 body {
   font-family: var(--font-sans);
   min-height: 100dvh;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+dialog {
+  overscroll-behavior: contain;
+}
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 220px;
 }
 h1,
 h2,

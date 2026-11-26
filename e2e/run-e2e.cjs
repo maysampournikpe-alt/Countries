@@ -301,9 +301,9 @@ async function answerAny(page, correct = true) {
     await page.locator('svg[role="img"] path').nth(40).click();
     assert(await page.getByRole('link', { name: 'Practise this flag' }).count(), 'map click did nothing');
     await page.getByRole('button', { name: 'Flag collection' }).click();
-    assert(await page.getByText(/of 195/).first().count(), 'collection missing');
+    await page.getByText(/collected/).waitFor({ timeout: 4000 });
     await page.getByRole('button', { name: 'Achievements' }).click();
-    assert(await page.getByText('World Champion: 195/195').count(), 'achievements missing');
+    await page.getByText('World Champion: 195/195').waitFor({ timeout: 4000 });
     assert(await page.getByText('Know Thyself').count(), 'achievement list incomplete');
   });
 

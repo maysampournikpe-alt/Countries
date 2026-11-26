@@ -112,7 +112,7 @@ export default function ChallengeMode() {
             {mode !== 'continental' && <Chip active={cfg.region === 'all'} onClick={() => setCfg({ ...cfg, region: 'all' })}>Whole world</Chip>}
             {CONTINENTS.map((k) => <Chip key={k} active={cfg.region === k} onClick={() => setCfg({ ...cfg, region: k })}>{k}</Chip>)}
             {mode === 'continental' && (
-              <select aria-label="Or choose a sub-region" value={(SUBREGIONS as string[]).includes(cfg.region) ? cfg.region : ''} onChange={(e) => e.target.value && setCfg({ ...cfg, region: e.target.value })} className="h-9 rounded-full border border-line bg-surface px-3 text-sm">
+              <select aria-label="Or choose a sub-region" value={(SUBREGIONS as string[]).includes(cfg.region) ? cfg.region : ''} onChange={(e) => e.target.value && setCfg({ ...cfg, region: e.target.value })} className="h-9 rounded-full border border-line bg-surface text-ink px-3 text-sm">
                 <option value="">Sub-region…</option>
                 {SUBREGIONS.map((s) => <option key={s} value={s}>{s} ({poolFor(s).length})</option>)}
               </select>
@@ -181,7 +181,7 @@ function CustomFields({ cfg, setCfg }: { cfg: Config; setCfg: (c: Config) => voi
       </Field>
       <div>
         <label htmlFor="custom-add" className="text-sm font-semibold">Specific countries (optional — overrides continents)</label>
-        <input id="custom-add" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add a country…" className="mt-2 w-full h-11 rounded-xl border border-line bg-raised px-3 outline-none focus:border-primary" />
+        <input id="custom-add" name="custom-country" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add a country…" className="mt-2 w-full h-11 rounded-xl border border-line bg-raised px-3 outline-none focus:border-primary" />
         {hits.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2">
             {hits.map((c) => <Chip key={c.code} onClick={() => { setCfg({ ...cfg, codes: [...cfg.codes, c.code] }); setQ(''); }}>+ {c.name}</Chip>)}

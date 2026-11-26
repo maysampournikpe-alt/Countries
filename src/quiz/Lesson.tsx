@@ -128,7 +128,7 @@ function IntroCard({ code, index, total, onNext, onPrev }: { code: string; index
             <h1 className="text-3xl sm:text-4xl font-semibold">{c.name}</h1>
             <p className="text-ink-soft">{c.subregion}, {c.continent}</p>
           </div>
-          <div className="w-44 sm:w-56 shrink-0"><WorldMap highlight={code} label={`Location of ${c.name}`} compact /></div>
+          <div className="w-full sm:w-64 shrink-0"><WorldMap highlight={code} label={`Location of ${c.name}`} compact /></div>
         </div>
         <dl className="mt-4 grid gap-3 text-[15px]">
           <div><dt className="font-semibold">What to look for</dt><dd className="text-ink-soft">{c.f}</dd></div>

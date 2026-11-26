@@ -38,7 +38,8 @@ export function CountryPicker({
   const showList = open && results.length > 0 && !selected;
 
   useEffect(() => {
-    if (!disabled) inputRef.current?.focus({ preventScroll: true });
+    // Desktop only: on touch screens focusing would open the keyboard and cover the flag.
+    if (!disabled && matchMedia('(pointer: fine)').matches) inputRef.current?.focus({ preventScroll: true });
   }, [disabled]);
 
   const choose = (c: Country) => {
@@ -88,6 +89,7 @@ export function CountryPicker({
         <input
           ref={inputRef}
           id={`${id}-input`}
+          name="country"
           role="combobox"
           aria-expanded={showList}
           aria-controls={`${id}-list`}
@@ -194,7 +196,7 @@ function AlphabetBrowser({ open, pool, onClose, onPick }: { open: boolean; pool:
   }, [list]);
   return (
     <Modal open={open} onClose={onClose} title="Choose a country">
-      <input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Filter…" aria-label="Filter countries" className="w-full h-11 rounded-xl border border-line bg-raised px-3 mb-3 outline-none focus:border-primary" />
+      <input name="filter" autoComplete="off" value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Filter…" aria-label="Filter countries" className="w-full h-11 rounded-xl border border-line bg-raised px-3 mb-3 outline-none focus:border-primary" />
       <nav aria-label="Letters" className="flex flex-wrap gap-1 mb-3">
         {groups.map(([k]) => (
           <a key={k} href={`#az-${k}`} className="h-7 min-w-7 px-1 grid place-items-center rounded-md text-xs font-semibold text-ink-soft hover:bg-primary-soft">{k}</a>

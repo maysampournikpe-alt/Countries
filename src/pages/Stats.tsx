@@ -1,6 +1,6 @@
 import { LevelIcon } from '../components/LevelIcon';
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Flag } from '../components/Flag';
 import { LevelLegend, RoadStrip } from '../components/RoadStrip';
 import { Bar, Chip, LinkButton, PageHeader, Panel, Ring, Stat } from '../components/ui';
@@ -17,7 +17,10 @@ const TROPHY = { none: '', bronze: '🥉', silver: '🥈', gold: '🥇' };
 const pct = (x: number | null) => (x == null ? '—' : `${Math.round(x * 100)}%`);
 
 export default function Stats() {
-  const [tab, setTab] = useState<'overview' | 'map' | 'collection' | 'achievements'>('overview');
+  const [params, setParams] = useSearchParams();
+  const TABS = ['overview', 'map', 'collection', 'achievements'] as const;
+  const tab = (TABS as readonly string[]).includes(params.get('tab') ?? '') ? (params.get('tab') as (typeof TABS)[number]) : 'overview';
+  const setTab = (t: (typeof TABS)[number]) => setParams(t === 'overview' ? {} : { tab: t }, { replace: true });
   return (
     <div>
       <PageHeader title="Statistics" subtitle="Where you stand, what is improving and what to do next." />

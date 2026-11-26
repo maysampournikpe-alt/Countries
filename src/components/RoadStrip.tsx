@@ -31,7 +31,7 @@ export function RoadStrip({ tall = false }: { tall?: boolean }) {
         {segments.map((s, i) => {
           const gap = i > 0 && segments[i - 1].continent !== s.continent;
           const h = s.level === 'mastered' ? 100 : s.level === 'provisional' ? 82 : s.level === 'reviewing' ? 70 : s.level === 'learning' ? 52 : 30;
-          return <span key={s.code} className={`flex-1 rounded-[2px] transition-all duration-500 ${gap ? 'ml-1 sm:ml-1.5' : ''}`} style={{ height: `${h}%`, background: LEVEL_INFO[s.level].color }} />;
+          return <span key={s.code} className={`flex-1 rounded-[2px] transition-[height,background-color] duration-500 ${gap ? 'ml-1 sm:ml-1.5' : ''}`} style={{ height: `${h}%`, background: LEVEL_INFO[s.level].color }} />;
         })}
       </div>
       <div className="mt-1.5 flex text-[11px] text-ink-faint" aria-hidden>
