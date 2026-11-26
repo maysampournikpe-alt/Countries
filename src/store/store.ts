@@ -130,7 +130,7 @@ export const useStore = create<Store>()(
   persist(
     (set, get) => {
       // XP, level-ups, achievements and day log — shared by every action that earns progress.
-      const award = (s: PersistedState, xp: number, now: number, extra?: Partial<DayLog>): Partial<PersistedState> => {
+      const award = (s: PersistedState, xp: number, now: number, extra?: Partial<DayLog>): PersistedState => {
         const today = dayKey(now);
         const day = { ...emptyDay(), ...s.days[today] };
         day.xp += xp;
