@@ -1,0 +1,8 @@
+node_modules
+dist
+src/data/generated
+public/flags
+*.log
+.DS_Store
+test-results
+e2e/screens
